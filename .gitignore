@@ -6,7 +6,7 @@
 /mix_eval/eval_scripts
 build_dynamic_benchmark_version_control.sh
 .env
-.vscode/
+.vscode
 *.DS_Store
 resampled_output/
 misc/
