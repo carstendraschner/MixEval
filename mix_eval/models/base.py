@@ -51,7 +51,7 @@ class ModelBase:
             from peft import AutoPeftModelForCausalLM, AutoPeftConfig
             from pathlib import Path
             config = AutoPeftConfig.from_pretrained(self.model_name)
-            root_path = Path(os.path.exists(self.model_name).parent.parent.parent
+            root_path = Path(self.model_name).parent.parent.parent
             candidate_basemodel = [m for m in root_path.glob(f"**/{config.base_model_name_or_path}/")]
             model = AutoModelForCausalLM.from_pretrained(
                 root_path / candidate_basemodel,
