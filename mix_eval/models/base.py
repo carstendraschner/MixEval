@@ -52,7 +52,8 @@ class ModelBase:
             from pathlib import Path
             config = AutoPeftConfig.from_pretrained(self.model_name)
             root_path = Path(self.model_name).parent.parent.parent
-            candidate_basemodel = [m for m in root_path.glob(f"**/{config.base_model_name_or_path}/")]
+            model_name = os.path.basename(config.base_model_name_or_path)
+            candidate_basemodel = [m for m in root_path.glob(f"**/{model_name}/")]
             model = AutoModelForCausalLM.from_pretrained(
                 root_path / candidate_basemodel,
                 torch_dtype=self.model_dtype,
