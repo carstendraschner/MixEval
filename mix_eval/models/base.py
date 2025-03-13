@@ -45,13 +45,24 @@ class ModelBase:
         
         if self.attn_implementation is not None:
             kwargs["attn_implementation"] = self.attn_implementation
+
+        import os
+        if os.path.exists(self.model_name) and os.path.exists(os.path.join(self.model_name, "adapter_config.json")):
+            from peft import AutoPeftModelForCausalLM
+            model = AutoPeftModelForCausalLM.from_pretrained(
+                self.model_name,
+                torch_dtype=self.model_dtype,
+                trust_remote_code=self.trust_remote_code,
+                **kwargs
+            ).eval()
             
-        model = AutoModelForCausalLM.from_pretrained(
-            self.model_name,
-            torch_dtype=self.model_dtype,
-            trust_remote_code=self.trust_remote_code,
-            **kwargs
-        ).eval()
+        else:   
+            model = AutoModelForCausalLM.from_pretrained(
+                self.model_name,
+                torch_dtype=self.model_dtype,
+                trust_remote_code=self.trust_remote_code,
+                **kwargs
+            ).eval()
         return model
     
     def build_tokenizer(self):
