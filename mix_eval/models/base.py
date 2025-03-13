@@ -48,9 +48,19 @@ class ModelBase:
 
         import os
         if os.path.exists(self.model_name) and os.path.exists(os.path.join(self.model_name, "adapter_config.json")):
-            from peft import AutoPeftModelForCausalLM
+            from peft import AutoPeftModelForCausalLM, AutoPeftConfig
+            from pathlib import Path
+            config = AutoPeftConfig.from_pretrained(self.model_name)
+            root_path = Path(os.path.exists(self.model_name).parent.parent.parent
+            candidate_basemodel = [m for m in root_path.glob(f"**/{config.base_model_name_or_path}/")]
+            model = AutoModelForCausalLM.from_pretrained(
+                root_path / candidate_basemodel,
+                torch_dtype=self.model_dtype,
+                trust_remote_code=self.trust_remote_code,
+                **kwargs
+            )
             model = AutoPeftModelForCausalLM.from_pretrained(
-                self.model_name,
+                model,
                 torch_dtype=self.model_dtype,
                 trust_remote_code=self.trust_remote_code,
                 **kwargs
