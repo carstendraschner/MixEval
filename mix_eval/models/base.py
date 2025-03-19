@@ -53,7 +53,7 @@ class ModelBase:
             config = AutoPeftConfig.from_pretrained(self.model_name)
             root_path = Path(self.model_name).parent.parent.parent
             model_name = os.path.basename(config.base_model_name_or_path)
-            candidate_basemodel = [m for m in root_path.glob(f"**/{model_name}/")]
+            candidate_basemodel = [m for m in root_path.glob(f"**/{model_name}/")][0]
             model = AutoModelForCausalLM.from_pretrained(
                 root_path / candidate_basemodel,
                 torch_dtype=self.model_dtype,
